@@ -284,6 +284,7 @@ function handleGameControls(event) {
             }
             break;
         case 'Escape':
+            
             escapetoggleMenuDisplay();
             break;
         case 'l':
@@ -813,9 +814,11 @@ function escapetoggleMenuDisplay() {
     document.getElementById('optionsMenu').style.display = 'none';
     
     if (document.getElementById('menu').style.display == 'none'){
+        bottomCenterContainer.style.display = 'none';
         document.getElementById('menu').style.display = 'block';}
     else{
         document.getElementById('menu').style.display = 'none';
+        bottomCenterContainer.style.display = 'block';
     }
     
 }
