@@ -1,0 +1,30 @@
+{
+  "name": "updown",
+  "version": "1.0.0",
+  "description": "A game of a ninja that has to climb a tree. Then he has to go down.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/G4bi567/UpDown.git"
+  },
+  "keywords": [],
+  "author": "Gabriel Teixeira Dias",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/G4bi567/UpDown/issues"
+  },
+  "homepage": "https://github.com/G4bi567/UpDown#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2"
+  },
+  "devDependencies": {
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  }
+}

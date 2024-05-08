@@ -1,0 +1,282 @@
+/* Main layout */
+main {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-color: #283044; /* Dark bluish-grey, resembling the night sky */
+}
+
+/* Menu styling */
+#menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  color: #FFFFFF; /* White text */
+}
+
+/* Header image */
+#header-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Header 1 styling */
+.h1 {
+  font-size: 24px;
+  color: #F4F4F9; /* Light grey */
+  margin-bottom: 20px;
+}
+
+/* Button styling */
+.button,
+button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 25px;
+  background-color: #4CAF50; /* Forest green */
+  color: #FFFFFF; /* White text */
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Button hover effect */
+.button:hover,
+button:hover {
+  background-color: #368037; /* Slightly darker green on hover */
+}
+
+/* Popup styling */
+.ninja-popup {
+  display: none;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8); /* Dark background for popups */
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.7); /* Green glow */
+  z-index: 100;
+}
+
+/* Popup content */
+.ninja-popup .popup-content {
+  text-align: center;
+}
+
+/* Popup headers */
+.ninja-popup h2 {
+  font-size: 1.5em;
+  color: #4CAF50; /* Forest green */
+}
+
+/* Popup paragraphs */
+.ninja-popup p {
+  font-size: 1em;
+}
+
+/* Popup buttons */
+.ninja-popup button {
+  background-color: #4CAF50; /* Forest green */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Popup button hover effect */
+.ninja-popup button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Text inputs */
+input[type="text"] {
+  padding: 12px;
+  margin: 4px 2px;
+  display: inline-block;
+  border: 2px solid #ccc; /* Grey border */
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Multiplayer lobby and new lobby styling */
+#multiplayerLobby,
+#newLobbyCreated {
+  text-align: center;
+  padding: 20px;
+  display: none; /* Hidden by default */
+}
+
+/* Additional general button styling */
+button {
+  background-color: #4CAF50; /* Forest green */
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+/* Button hover effect - generalized */
+button:hover {
+  background-color: #368037; /* Darker green on hover */
+}
+/* Options Menu Container */
+#optionsMenu {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background: rgba(28, 22, 40, 0.9); /* semi-transparent dark background */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  color: #FFFFFF; /* White text color */
+  display: none; /* Hidden by default */
+  z-index: 105; /* Make sure it's on top */
+}
+
+/* Labels in the options menu */
+#optionsMenu label {
+  font-size: 14px;
+  margin-top: 10px;
+  color: #DDDDDD; /* Light grey for better readability */
+  display: block;
+}
+
+/* Styling for range sliders */
+#optionsMenu input[type="range"] {
+  -webkit-appearance: none; /* Override default CSS styles */
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
+  background: #4CAF50; /* Forest green */
+  outline: none;
+  opacity: 0.7; /* Partial transparency */
+  -webkit-transition: .2s; /* Transition for hover effect */
+  transition: opacity .2s;
+  cursor: pointer;
+}
+
+/* Mouse-over effects for sliders */
+#optionsMenu input[type="range"]:hover {
+  opacity: 1; /* Fully opaque on hover */
+}
+
+/* The slider handle (thumb) */
+#optionsMenu input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Remove default style */
+  appearance: none;
+  width: 18px; /* Set a specific slider handle width */
+  height: 18px; /* Set a specific slider handle height */
+  border-radius: 50%; /* Circular handle */
+  background: #FFFFFF; /* White slider handle */
+  cursor: pointer; /* Cursor changes to pointer when hovering over the slider handle */
+}
+
+#optionsMenu input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  cursor: pointer;
+}
+
+/* Button styling within options menu */
+#optionsMenu button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #368037; /* Green */
+  color: #FFFFFF; /* White */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Hover effect for buttons */
+#optionsMenu button:hover {
+  background-color: #286029; /* Darker green */
+}
+/* Container for the damage bars and death counters */
+#bottomCenterContainer {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(28, 22, 40, 0.9); /* Semi-transparent dark background */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Individual damage bar styles */
+#damageBars {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+#damageBars .bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+#damageBars label {
+  color: #F4F4F9; /* Light grey for better readability */
+  margin-bottom: 4px;
+}
+
+#damageBars progress {
+  width: 120px;
+  height: 16px;
+  border-radius: 5px;
+  background: #4CAF50; /* Forest green */
+  border: 1px solid #F4F4F9; /* Light grey */
+}
+
+/* Death counter styles */
+#deathCounters {
+  text-align: center;
+  color: #F4F4F9; /* Light grey for better readability */
+}
+
+#deathCounters span {
+  display: block;
+  margin-top: 4px;
+}
