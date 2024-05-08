@@ -648,8 +648,8 @@ function updateDamageBars() {
     const damageBar2 = document.getElementById('damageBar2');
 
     // Calculate the damage percentage based on the amplifier values
-    const damagePercentage1 = Math.min(amplifier1 * 10, 100); // Scale it appropriately
-    const damagePercentage2 = Math.min(amplifier2 * 10, 100); // Scale it appropriately
+    const damagePercentage1 = Math.min((amplifier1-1) * 50, 100); // Scale it appropriately
+    const damagePercentage2 = Math.min((amplifier2-1) * 50, 100); // Scale it appropriately
 
     // Update the progress bar values
     damageBar1.value = damagePercentage1;
