@@ -467,6 +467,7 @@ function handleWindConditions() {
 }
 
 function throttleUpdateGame() {
+        handleConnectionErrors()
         updateGame();
         lastUpdateTime = Date.now();
 }

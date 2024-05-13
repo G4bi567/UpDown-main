@@ -70,21 +70,19 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${socket.id}`);
-        if (socket.lobbyId) {
-            // Remove the player from the lobby
-            delete lobbies[socket.lobbyId][socket.id];
-    
-            // Check if the lobby is now empty
-            if (Object.keys(lobbies[socket.lobbyId]).length === 0) {
-                // If no players left, delete the lobby
-                delete lobbies[socket.lobbyId];
+        const lobbyId = socket.lobbyId;
+        if (lobbyId && lobbies[lobbyId]) {
+            delete lobbies[lobbyId][socket.id];
+            if (Object.keys(lobbies[lobbyId]).length === 0) {
+                delete lobbies[lobbyId];
             } else {
-                // Notify remaining players in the lobby about the update
-                io.to(socket.lobbyId).emit('lobbyUpdate', { users: lobbies[socket.lobbyId] });
-                io.to(socket.lobbyId).emit('playerDisconnected', { playerId: socket.id, message: 'A player has left the game.' });
+                // Notify all remaining clients in the lobby
+                io.to(lobbyId).emit('lobbyUpdate', { users: lobbies[lobbyId] });
+                io.to(lobbyId).emit('playerDisconnected', { playerId: socket.id, message: 'A player has left the game.' });
             }
         }
     });
+    
     
 });
 

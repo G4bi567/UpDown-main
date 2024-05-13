@@ -1,3 +1,4 @@
+let MAX_PLAYERS_PER_LOBBY =2
 function toggleMultiplayerLobby() {
     var lobbyDiv = document.getElementById('multiplayerLobby');
     lobbyDiv.style.display = lobbyDiv.style.display === "none" ? "block" : "none";
@@ -25,8 +26,7 @@ var socket;  // Declare socket globally
 let newLobbyId;
 let playerRole; // Global variable to store the player's role
 function createNewLobby() {
-    showWaitingScreen();
-    socket = io('https://3000-g4bi567-updownmain-ax5bnjc60y5.ws-eu111.gitpod.io', { transports: ['websocket'], withCredentials: true });
+    socket = io('https://3000-g4bi567-updownmain-maytjpkb4o9.ws-eu111.gitpod.io', { transports: ['websocket'], withCredentials: true });
     socket.on('connect', () => {
         let newLobbyId = Math.random().toString(36).substr(2, 7);
         socket.emit('createLobby', { lobbyId: newLobbyId, nickname: playerNickname });
@@ -34,12 +34,15 @@ function createNewLobby() {
         socket.on('lobbyCreated', (data) => {
             console.log('Lobby successfully created with ID:', data.lobbyId);
             playerRole = data.role;
-            
+            document.getElementById('newLobbyId').textContent = newLobbyId;
+            document.getElementById('newLobbyCreated').style.display = 'block';
             // Now wait for the lobby to be updated with two players
             socket.on('lobbyUpdate', (updateData) => {
                 if (Object.keys(updateData.users).length === MAX_PLAYERS_PER_LOBBY) {
                     hideWaitingScreen();
+                    lobbyReady = true
                     initializeGame();
+                    setupSocketListeners();
                 }
             });
         });
@@ -49,7 +52,6 @@ function createNewLobby() {
 }
 
 function joinLobby() {
-    showWaitingScreen();
     const lobbyId = document.getElementById('lobbyId').value.trim();
     const nicknameInput = document.getElementById('nickname');
     const playerNickname = nicknameInput.value.trim();
@@ -59,21 +61,18 @@ function joinLobby() {
         return;
     }
 
-    socket = io('https://3000-g4bi567-updownmain-ax5bnjc60y5.ws-eu111.gitpod.io', { transports: ['websocket'], withCredentials: true });
+    socket = io('https://3000-g4bi567-updownmain-maytjpkb4o9.ws-eu111.gitpod.io', { transports: ['websocket'], withCredentials: true });
     socket.on('connect', () => {
         socket.emit('joinLobby', { lobbyId, nickname: playerNickname });
 
         socket.on('joinedLobby', (data) => {
             console.log('Joined lobby with ID:', data.lobbyId);
             playerRole = data.role;
-            
-            // Wait for lobby update indicating two players
-            socket.on('lobbyUpdate', (updateData) => {
-                if (Object.keys(updateData.users).length === MAX_PLAYERS_PER_LOBBY) {
-                    hideWaitingScreen();
-                    initializeGame();
-                }
-            });
+            hideWaitingScreen();
+            lobbyReady = true
+            initializeGame();
+            setupSocketListeners();
+
         });
     });
 
@@ -94,15 +93,12 @@ function handleConnectionErrors() {
     });
 
     // You might also want to handle disconnection events
-    socket.on('disconnect', (reason) => {
-        hideWaitingScreen(); // If the server disconnects, hide the waiting screen
-        if (reason === 'io server disconnect') {
-            alert('You have been disconnected from the server.');
-        } else {
-            alert('Connection lost: ' + reason); // Provide more detailed feedback if needed
-        }
-        resetGame(); // Reset the game state
+    socket.on('playerDisconnected', (data) => {
+        alert(data.message); // Notify the player about the disconnection
+        // Additional client-side logic to handle the game state
+        resetGame()
     });
+    
 }
 
 socket.on('playerDisconnected', (data) => {
