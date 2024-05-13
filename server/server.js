@@ -34,14 +34,14 @@ io.on('connection', (socket) => {
         if (socket.lobbyId) {
             socket.leave(socket.lobbyId);
         }
-
+    
         if (lobbies[lobbyId] && Object.keys(lobbies[lobbyId]).length < MAX_PLAYERS_PER_LOBBY) {
             socket.join(lobbyId);
             socket.lobbyId = lobbyId;
-            const role = Object.keys(lobbies[lobbyId]).length === 1 ? 'player2' : 'spectator'; // Assign 'player2' if only one user in lobby
+            const role = Object.keys(lobbies[lobbyId]).length === 1 ? 'player2' : 'spectator';
             lobbies[lobbyId][socket.id] = { nickname, role };
+            io.to(lobbyId).emit('lobbyUpdate', { users: lobbies[lobbyId] }); // Emit to all in the lobby
             io.to(socket.id).emit('joinedLobby', { lobbyId, role, users: lobbies[lobbyId] });
-            io.to(lobbyId).emit('lobbyUpdate', { users: lobbies[lobbyId] });
         } else {
             socket.emit('lobbyError', 'Lobby joining failed');
         }
@@ -71,14 +71,21 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${socket.id}`);
         if (socket.lobbyId) {
+            // Remove the player from the lobby
             delete lobbies[socket.lobbyId][socket.id];
+    
+            // Check if the lobby is now empty
             if (Object.keys(lobbies[socket.lobbyId]).length === 0) {
+                // If no players left, delete the lobby
                 delete lobbies[socket.lobbyId];
             } else {
+                // Notify remaining players in the lobby about the update
                 io.to(socket.lobbyId).emit('lobbyUpdate', { users: lobbies[socket.lobbyId] });
+                io.to(socket.lobbyId).emit('playerDisconnected', { playerId: socket.id, message: 'A player has left the game.' });
             }
         }
     });
+    
 });
 
 const PORT = process.env.PORT || 3000;

@@ -14,52 +14,42 @@ function showJoinLobby() {
     document.getElementById('multiplayerOptions').style.display = 'none';
     document.getElementById('newLobbyCreated').style.display = 'none';
 }
+function showWaitingScreen() {
+    document.getElementById('waitingScreen').style.display = 'flex';
+}
 
+function hideWaitingScreen() {
+    document.getElementById('waitingScreen').style.display = 'none';
+}
 var socket;  // Declare socket globally
 let newLobbyId;
 let playerRole; // Global variable to store the player's role
 function createNewLobby() {
-    socket = io('https://3000-g4bi567-updownmain-jee9ywuth8r.ws-eu111.gitpod.io', { transports: ['websocket'], withCredentials: true });
+    showWaitingScreen();
+    socket = io('https://3000-g4bi567-updownmain-ax5bnjc60y5.ws-eu111.gitpod.io', { transports: ['websocket'], withCredentials: true });
     socket.on('connect', () => {
         let newLobbyId = Math.random().toString(36).substr(2, 7);
         socket.emit('createLobby', { lobbyId: newLobbyId, nickname: playerNickname });
 
         socket.on('lobbyCreated', (data) => {
             console.log('Lobby successfully created with ID:', data.lobbyId);
-            playerRole = data.role; // Save the role assigned by the server
+            playerRole = data.role;
             
-            // Hide the input and buttons for creating or joining a lobby
-            document.getElementById('multiplayerLobby').style.display = 'none';
-
-            // Display the new lobby ID and the Copy ID button
-            document.getElementById('newLobbyId').textContent = newLobbyId;
-            document.getElementById('newLobbyCreated').style.display = 'block';
-            document.getElementById('newLobbyCreated').style.textAlign = 'left';
-            document.getElementById('menu').style.display = 'none';
-            lobbyReady = true
-            initializeGame();
-            setupSocketListeners();
-
-            
+            // Now wait for the lobby to be updated with two players
+            socket.on('lobbyUpdate', (updateData) => {
+                if (Object.keys(updateData.users).length === MAX_PLAYERS_PER_LOBBY) {
+                    hideWaitingScreen();
+                    initializeGame();
+                }
+            });
         });
     });
-    socket.on('connect_error', (error) => {
-        // Alert the user that the connection failed
-        alert('Failed to connect to the multiplayer server: ' + error.message);
-        resetGame()
-    });
 
-    socket.on('connect_timeout', () => {
-        // Alert the user that the connection has timed out
-        alert('Connection to the multiplayer server timed out.');
-        resetGame()
-    });
-
-
+    handleConnectionErrors();
 }
 
-
 function joinLobby() {
+    showWaitingScreen();
     const lobbyId = document.getElementById('lobbyId').value.trim();
     const nicknameInput = document.getElementById('nickname');
     const playerNickname = nicknameInput.value.trim();
@@ -69,41 +59,57 @@ function joinLobby() {
         return;
     }
 
-    socket = io('http://localhost:3000', { transports: ['websocket'], withCredentials: true });
+    socket = io('https://3000-g4bi567-updownmain-ax5bnjc60y5.ws-eu111.gitpod.io', { transports: ['websocket'], withCredentials: true });
     socket.on('connect', () => {
         socket.emit('joinLobby', { lobbyId, nickname: playerNickname });
 
         socket.on('joinedLobby', (data) => {
             console.log('Joined lobby with ID:', data.lobbyId);
-            playerRole = data.role; // Save the role assigned by the server
-            newLobbyId = data.lobbyId
-            // Hide the input and buttons for creating or joining a lobby
-            document.getElementById('multiplayerLobby').style.display = 'none';
-
-            // Display the new lobby ID and the Copy ID button
-            document.getElementById('newLobbyId').textContent = newLobbyId;
-            document.getElementById('newLobbyCreated').style.display = 'block';
-            document.getElementById('newLobbyCreated').style.textAlign = 'left';
-            document.getElementById('menu').style.display = 'none';
+            playerRole = data.role;
             
-            lobbyReady = true
-            initializeGame();
-            setupSocketListeners();
+            // Wait for lobby update indicating two players
+            socket.on('lobbyUpdate', (updateData) => {
+                if (Object.keys(updateData.users).length === MAX_PLAYERS_PER_LOBBY) {
+                    hideWaitingScreen();
+                    initializeGame();
+                }
+            });
         });
     });
+
+    handleConnectionErrors();
+}
+
+function handleConnectionErrors() {
     socket.on('connect_error', (error) => {
-        // Alert the user that the connection failed
-        alert('Failed to connect to the multiplayer server: ' + error.message);
-        resetGame()
+        hideWaitingScreen(); // Hide the waiting screen as we can't proceed without a connection
+        alert('Failed to connect to the multiplayer server: ' + error.message); // Inform the user
+        resetGame(); // Optionally reset the game state to allow retrying
+    });
+    
+    socket.on('connect_timeout', () => {
+        hideWaitingScreen(); // Same handling for timeout
+        alert('Connection to the multiplayer server timed out.');
+        resetGame(); // Reset the game state
     });
 
-    socket.on('connect_timeout', () => {
-        // Alert the user that the connection has timed out
-        alert('Connection to the multiplayer server timed out.');
-        resetGame()
+    // You might also want to handle disconnection events
+    socket.on('disconnect', (reason) => {
+        hideWaitingScreen(); // If the server disconnects, hide the waiting screen
+        if (reason === 'io server disconnect') {
+            alert('You have been disconnected from the server.');
+        } else {
+            alert('Connection lost: ' + reason); // Provide more detailed feedback if needed
+        }
+        resetGame(); // Reset the game state
     });
 }
 
+socket.on('playerDisconnected', (data) => {
+    alert(data.message); // Alert the user that their opponent has left
+    showMainMenu(); // Show the main menu
+    resetGame(); // Reset game to initial state
+});
 
 function copyLobbyId() {
     const lobbyId = document.getElementById('newLobbyId').textContent;
