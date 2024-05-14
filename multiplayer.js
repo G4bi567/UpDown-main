@@ -4,22 +4,14 @@ function toggleMultiplayerLobby() {
     lobbyDiv.style.display = lobbyDiv.style.display === "none" ? "block" : "none";
 }
 
-function showMultiplayerOptions() {
-    document.getElementById('multiplayerOptions').style.display = 'block';
-    document.getElementById('multiplayerLobby').style.display = 'none';
-    document.getElementById('newLobbyCreated').style.display = 'none';
-}
 
-function showJoinLobby() {
-    document.getElementById('multiplayerLobby').style.display = 'block';
-    document.getElementById('multiplayerOptions').style.display = 'none';
-    document.getElementById('newLobbyCreated').style.display = 'none';
-}
+
 function showWaitingScreen() {
     document.getElementById('waitingScreen').style.display = 'flex';
 }
 
 function hideWaitingScreen() {
+    document.getElementById('multiplayerLobby').style.display = 'none';
     document.getElementById('waitingScreen').style.display = 'none';
 }
 var socket;  // Declare socket globally
@@ -94,9 +86,10 @@ function handleConnectionErrors() {
 
     // You might also want to handle disconnection events
     socket.on('playerDisconnected', (data) => {
+        document.getElementById('newLobbyCreated').style.display = 'none';
+        resetGame()
         alert(data.message); // Notify the player about the disconnection
         // Additional client-side logic to handle the game state
-        resetGame()
     });
     
 }

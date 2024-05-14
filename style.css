@@ -311,3 +311,14 @@ button:hover {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+#newLobbyCreated {
+  position: absolute;
+  top: 450px;
+  left: 20px;
+  text-align: left;
+  padding: 20px;
+  background-color: rgba(28, 22, 40, 0.9); /* Semi-transparent dark background */
+  color: #FFFFFF; /* White text */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}

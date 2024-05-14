@@ -8,7 +8,7 @@ let CollisionBlocks = [], platformCollisionBlocks = [];
 
 
 let gameStarted = false;
-let mode;
+let mode = false;
 let player1;
 let player2;
 let spawnPlayer2 = false;
@@ -82,40 +82,47 @@ function startGame(mode_name){
     
     mode = mode_name;
     if (mode_name == "solo") {
+        respawnPosition = { x: 50, y: 1100 };
         bottomCenterContainer.style.display = 'none';
         player2=null
         resetGame()
         lobbyReady = true;
         initializeGame();
     } else if (mode_name == "local") {
+        respawnPosition = { x: 50, y: 1100 };
+        respawnPositionPlayer2 = { x: respawnPosition.x + 100, y: respawnPosition.y };
         bottomCenterContainer.style.display = 'none';
         resetGame()
         lobbyReady = true;
         spawnPlayer2 = true;
         initializeGame();
     } else if (mode_name == "multiplayer") {
+        respawnPosition = { x: 50, y: 1100 };
+        respawnPositionPlayer2 = { x: respawnPosition.x + 100, y: respawnPosition.y };
         bottomCenterContainer.style.display = 'none';
         resetGame()
         spawnPlayer2 = true;
         toggleMultiplayerLobby()
     } else if (mode_name == "arenasolo") {
+        resetGame()
         bottomCenterContainer.style.display = 'block';
         mode = "local";
         Arenamod = true
-        resetGame()
+        
         lobbyReady = true;
         spawnPlayer2 = true;
         respawnPosition = { x: 150, y: 300 };
-        respawnPositionPlayer2 = { x: respawnPosition.x + 400 , y: respawnPosition.y };
+        respawnPositionPlayer2 = { x: respawnPosition.x + 900 , y: respawnPosition.y };
         attackCooldown = 700;
         initializeGame();
     } else if (mode_name == "arenamultiplayer") {
+        resetGame()
         bottomCenterContainer.style.display = 'block';
         respawnPosition = { x: 100, y: 300 };
-        respawnPositionPlayer2 = { x: respawnPosition.x + 700, y: respawnPosition.y };
+        respawnPositionPlayer2 = { x: respawnPosition.x + 900, y: respawnPosition.y };
         mode = "multiplayer";
         Arenamod = true
-        resetGame()
+        
         spawnPlayer2 = true;
         attackCooldown = 700;
         toggleMultiplayerLobby();
@@ -811,15 +818,24 @@ function updateRemotePlayer(state) {
 }
 
 function escapetoggleMenuDisplay() {
+    if (mode == false){
+        return
+    }
     document.getElementById('multiplayerLobby').style.display = 'none';
     document.getElementById('optionsMenu').style.display = 'none';
     
     if (document.getElementById('menu').style.display == 'none'){
-        bottomCenterContainer.style.display = 'none';
+        if (Arenamod == true){
+            bottomCenterContainer.style.display = 'none';
+        }
+        
         document.getElementById('menu').style.display = 'block';}
     else{
         document.getElementById('menu').style.display = 'none';
-        bottomCenterContainer.style.display = 'block';
+        if (Arenamod == true){
+            bottomCenterContainer.style.display = 'block';
+        }
+        
     }
     
 }
@@ -872,7 +888,7 @@ function checkifwin(player){
 }
 
 function resetGame() {
-
+    bottomCenterContainer.style.display = 'none';
     if (player1 && player1.body) {
         Matter.Body.setPosition(player1.body, respawnPosition);
         Matter.Body.setVelocity(player1.body, { x: 0, y: 0 });
@@ -889,7 +905,7 @@ function resetGame() {
     timeAboveThreshold = 0;
     spawnPlayer2=false
     lobbyReady=false
-
+    Arenamod = false
 
     if (backgroundMusic.isPlaying()) {
         backgroundMusic.stop();
