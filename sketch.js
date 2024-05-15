@@ -809,6 +809,15 @@ function setupSocketListeners() {
     socket.on('attackReceived', (data) => {
         let attacker = player2
         let target = player1 
+    
+        if(target.body.label == "player2"){
+            amplifier2 += 0.1
+
+        }else{
+            amplifier1 += 0.1
+            
+        }
+     
         if (target && attacker) {
                 applyAttackForce( target,data.force);
             }
