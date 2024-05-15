@@ -18,7 +18,7 @@ var socket;  // Declare socket globally
 let newLobbyId;
 let playerRole; // Global variable to store the player's role
 function createNewLobby() {
-    socket = io('https://3000-g4bi567-updownmain-maytjpkb4o9.ws-eu111.gitpod.io', { transports: ['websocket'], withCredentials: true });
+    socket = io('https://3000-g4bi567-updownmain-sa36n2t419h.ws-eu111.gitpod.io', { transports: ['websocket'], withCredentials: true });
     socket.on('connect', () => {
         let newLobbyId = Math.random().toString(36).substr(2, 7);
         socket.emit('createLobby', { lobbyId: newLobbyId, nickname: playerNickname });
@@ -53,7 +53,7 @@ function joinLobby() {
         return;
     }
 
-    socket = io('https://3000-g4bi567-updownmain-maytjpkb4o9.ws-eu111.gitpod.io', { transports: ['websocket'], withCredentials: true });
+    socket = io('https://3000-g4bi567-updownmain-sa36n2t419h.ws-eu111.gitpod.io', { transports: ['websocket'], withCredentials: true });
     socket.on('connect', () => {
         socket.emit('joinLobby', { lobbyId, nickname: playerNickname });
 

@@ -638,14 +638,29 @@ function updateDeathCounters() {
     document.getElementById('deathCount1').innerText = deathCount1;
     document.getElementById('deathCount2').innerText = deathCount2;
 }
+const lastRespawnTime = { player1: 0, player2: 0 }; // Object to track last respawn time for each player
+
 function respawnPlayer(player) {
-    if(player.body.label == "player2"){
-        deathCount2 ++
-        amplifier2 = 1 
-    }else{
-        deathCount1 ++
-        amplifier1 = 1
+    const now = Date.now(); // Get the current time in milliseconds
+
+    if (player.body.label === "player1") {
+        if (now - lastRespawnTime.player1 < 1000) {
+            // If the player fell within the last second, do not respawn
+            return;
+        }
+        deathCount1++;
+        amplifier1 = 1;
+        lastRespawnTime.player1 = now; // Update the last respawn time
+    } else if (player.body.label === "player2") {
+        if (now - lastRespawnTime.player2 < 1000) {
+            // If the player fell within the last second, do not respawn
+            return;
+        }
+        deathCount2++;
+        amplifier2 = 1;
+        lastRespawnTime.player2 = now; // Update the last respawn time
     }
+
     updateDeathCounters();
     const respawnPos = player.body.label === "player1" ? respawnPosition : respawnPositionPlayer2;
     Matter.Body.setPosition(player.body, respawnPos);
